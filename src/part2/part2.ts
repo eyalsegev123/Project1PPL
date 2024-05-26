@@ -9,19 +9,20 @@ export const countVowels = (str : string) : number =>
 const isVowel = (c : string) : number => ("AEIOUaeiou".includes(c) ? 1 : 0); 
 
 /* Question 2 */
-export const isPaired = (str : string) : boolean => 
-    myIsPaired(stringToArray(str).filter((x : string) : boolean => "[](){}".includes(x) , 0) , stringToArray(""));
-           
-const myIsPaired = (str : string[], stack : string[]) : boolean => (str.length === 0 && stack.length === 0) ? true :
-    ("[({".includes(str[0]) ? myIsPaired(str.slice(1) , PushToStack(stack , str[0]) ) : (isFit(str[0] , stack) ? 
-    myIsPaired(str.slice(1) , PopStack(stack)) : false));
-    
-const PushToStack = (stack : string[] , add: string) : string[] => [...stack , add];
-const PopStack = (stack : string[]) : string[] => stack.length === 0 ? stack : stack.slice(0 , stack.length-1);
+export const isPaired = (str: string): boolean => 
+    myFilter(str).reduce(reducer, []).length === 0;
 
-const isFit = (str : string, stack : string[]) : boolean => ((stack.length > 0) && ((str === ')' && stack[stack.length-1] === '(') ||
-            (str === ']' && stack[stack.length-1] === '[') || (str === '}' && stack[stack.length-1] === '{'))) ? true : false
- 
+const reducer = (stack: string[], char: string): string[] => 
+    "([{".includes(char) ? 
+      [...stack, char] : 
+      ((stack[stack.length - 1] == '(' && char == ')') ||
+      (stack[stack.length - 1] == '{' && char == '}') ||
+      (stack[stack.length - 1] == '[' && char == ']')) ? 
+        stack.slice(0, -1) : 
+        [...stack, char];
+  
+const myFilter = (str: string): string[] => 
+    str.split('').filter((x: string): boolean => "[](){}".includes(x));
 
 /* Question 3 */
 export type WordTree = {
